@@ -1,0 +1,34 @@
+name: CI/CD Docker Hub to Swarm
+
+on:
+  push:
+    branches: [ "main" ] # Dispara ao enviar código para a branch main
+
+env:
+  # Digite seu usuário do Docker Hub e o nome da imagem (tudo em minúsculo)
+  DOCKER_USER: lucasgfeldmann
+  IMAGE_NAME: trabalho-cn-app
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o código do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Faz login no Docker Hub usando os Secrets
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. Constrói a imagem e faz o Push para o Docker Hub
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.DOCKER_USER }}/${{ env.IMAGE_NAME }}:latest
