@@ -1,34 +1,43 @@
-name: CI/CD Docker Hub to Swarm
+name: CI/CD Docker Hub to Swarm Imadiato
 
 on:
   push:
-    branches: [ "main" ] # Dispara ao enviar código para a branch main
+    branches: [ "main" ]
 
 env:
-  # Digite seu usuário do Docker Hub e o nome da imagem (tudo em minúsculo)
   DOCKER_USER: lucasgfeldmann
   IMAGE_NAME: trabalho-cn-app
 
 jobs:
-  build-and-deploy:
+  # PASSO 1: Constrói a imagem e envia para o Docker Hub (Nuvem do GitHub)
+  build-and-push:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Baixa o código do repositório
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Faz login no Docker Hub usando os Secrets
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 3. Constrói a imagem e faz o Push para o Docker Hub
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ env.DOCKER_USER }}/${{ env.IMAGE_NAME }}:latest
+
+  # PASSO 2: Manda a VM atualizar (Imediato, via Self-Hosted Runner)
+  deploy-to-swarm:
+    needs: build-and-push # Só dispara se o build acima der certo
+    runs-on: self-hosted  # <--- Isso faz o comando rodar direto na sua VM!
+
+    steps:
+      - name: Atualizar o Docker Swarm
+        run: |
+          # Como esse comando já está rodando fisicamente no seu Manager, 
+          # basta digitar o comando do Docker.
+          # ATENÇÃO: Troque 'NOME_DO_SEU_SERVICO' pelo nome real do serviço no Swarm
+          docker service update --image ${{ env.DOCKER_USER }}/${{ env.IMAGE_NAME }}:latest --force vigilant_fermi
