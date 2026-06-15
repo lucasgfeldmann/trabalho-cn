@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Tarefa
-
+admin.site.site_header = "📋 Gerenciador de Tarefas"
+admin.site.site_title = "Tarefas Admin"
+admin.site.index_title = "Painel de Controle"
 
 @admin.register(Tarefa)
 class TarefaAdmin(admin.ModelAdmin):
