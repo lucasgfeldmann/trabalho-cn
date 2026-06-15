@@ -4,7 +4,7 @@ from .models import Tarefa
 
 @admin.register(Tarefa)
 class TarefaAdmin(admin.ModelAdmin):
-    list_display = ("done", "date_time", "usuario")
+    list_display = ("nome","done", "date_time", "usuario")
     exclude = ("usuario",)
 
     def get_queryset(self, request):
