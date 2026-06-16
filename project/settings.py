@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'postgres',     # Nome do banco de dados criado no Postgres
         'USER': 'postgres',           # Seu usuário do Postgres (ex: postgres)
         'PASSWORD': 'password',         # Sua senha do banco de dados
-        'HOST': '192.168.48.51',             # 'localhost' ou '127.0.0.1' se estiver rodando na sua máquina
+        'HOST': 'db',             # 'localhost' ou '127.0.0.1' se estiver rodando na sua máquina
         'PORT': '5432',                  # Porta padrão do PostgreSQL
     }
 }

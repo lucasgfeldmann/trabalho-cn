@@ -14,3 +14,13 @@ services:
         constraints:
           # Garante que o App NUNCA rode na VM do Proxy
           - node.labels.type != proxy
+db:
+  image: postgres:15-alpine
+  environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_DB=postgres
+  deploy:
+    placement:
+      constraints:
+        - node.labels.type == db
