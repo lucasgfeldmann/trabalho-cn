@@ -1,5 +1,4 @@
-name: CI/CD Docker Hub to Swarm Imadiato
-
+name: CI/CD Docker Hub to Swarm Imediato
 
 on:
   push:
@@ -34,11 +33,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Liberar espaço
         run: |
           docker system prune -f
           find $HOME/actions-runner/_diag -name "*.log" -mtime +3 -delete 2>/dev/null || true
 
-      - name: Atualizar o Docker Swarm
+      - name: Atualizar o Docker Swarm via Stack
         run: |
-          docker service update --image ${{ env.DOCKER_USER }}/${{ env.IMAGE_NAME }}:latest --force vigilant_fermi
+          docker stack deploy -c docker-compose.yml minha_stack_app --with-registry-auth

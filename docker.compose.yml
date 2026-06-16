@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    # Usa a imagem que o GitHub Actions acabou de criar
+    image: lucasgfeldmann/trabalho-cn-app:latest
+    # Se você usa alguma porta específica, declare aqui. Exemplo:
+    ports:
+      - "7000:8000"
+    deploy:
+      mode: replicated
+      replicas: 2 # Mantém 2 containers do app rodando ao mesmo tempo
+      placement:
+        constraints:
+          # Garante que o App NUNCA rode na VM do Proxy
+          - node.labels.type != proxy
