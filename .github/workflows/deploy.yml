@@ -43,4 +43,4 @@ jobs:
 
       - name: Atualizar o Docker Swarm via Stack
         run: |
-          docker stack deploy -c docker-compose.yml minha_stack_app --with-registry-auth
+          docker stack deploy -c docker-compose.yml app-trabalho-cn --with-registry-auth  
